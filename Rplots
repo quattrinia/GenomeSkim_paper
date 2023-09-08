@@ -1,8 +1,42 @@
 ##Rplots##
 library(ggplot2)
+#READSVSLOCI
 skimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimstats.csv")
 ggplot(skimdata, aes(x=READS, y=LOCI, color=CLASS)) 
 + geom_point(size=1)+geom_smooth(method="auto", se=TRUE, fullrange=FALSE, level=0.95, aes(fill=CLASS))
 +scale_color_manual(values=c('darkred', 'darkblue'))
 +scale_fill_manual(name="CLASS", breaks=c("Hexacorallia", "Octocorallia"), values=c('Hexacorallia'='red', "Octocorallia"="blue"))
 +theme_bw()
+
+
+library(tidyverse)
+#READSvsCircular
+filtered_skim <- skimdata %>% dplyr::filter(!Circularized %in% '')
+ggplot(filtered_skim, aes(x=CLASS, y=READS, fill="Circularized")) + geom_boxplot()
+p=ggplot(filtered_skim, aes(x=CLASS, y=READS, fill=Circularized)) +
+    geom_boxplot()+scale_fill_manual(values=c("darkred",  "blue"))
+p
+
+#ANOVA one way
+octoskimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimdata_octos.csv")
+filtered_skim <- octoskimdata %>% dplyr::filter(!Circularized %in% '')
+aov=aov(filtered_skim$READS~factor(filtered_skim$Circularized))
+
+summary(aov)
+                                    Df    Sum Sq   Mean Sq F value
+factor(filtered_skim$Circularized)   1 2.962e+15 2.962e+15   96.86
+Residuals                          168 5.138e+15 3.058e+13        
+                                   Pr(>F)    
+factor(filtered_skim$Circularized) <2e-16 ***
+Residuals                                    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+hexaskimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimdata_hexa.csv")
+filtered_skim <- hexaskimdata %>% dplyr::filter(!Circularized %in% '')
+aov=aov(filtered_skim$READS~factor(filtered_skim$Circularized))
+summary(aov)
+                                   Df    Sum Sq   Mean Sq F value Pr(>F)
+factor(filtered_skim$Circularized)  1 9.314e+13 9.314e+13   1.372  0.251
+Residuals                          30 2.037e+15 6.790e+13   
+

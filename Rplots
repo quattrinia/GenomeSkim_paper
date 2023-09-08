@@ -40,3 +40,8 @@ summary(aov)
 factor(filtered_skim$Circularized)  1 9.314e+13 9.314e+13   1.372  0.251
 Residuals                          30 2.037e+15 6.790e+13   
 
+#READS vs YEAR for Pool 1
+ggplot(pool1kimdata, aes(x=YEAR, y=READS)) + 
++     geom_point(size=1, color="darkblue")+
++     geom_smooth(method="lm", color="darkblue")+theme_bw()
+

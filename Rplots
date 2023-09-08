@@ -1,7 +1,8 @@
-echo "# GenomeSkim_paper" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/quattrinia/GenomeSkim_paper.git
-git push -u origin main
+##Rplots##
+library(ggplot2)
+skimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimstats.csv")
+ggplot(skimdata, aes(x=READS, y=LOCI, color=CLASS)) 
++ geom_point(size=1)+geom_smooth(method="auto", se=TRUE, fullrange=FALSE, level=0.95, aes(fill=CLASS))
++scale_color_manual(values=c('darkred', 'darkblue'))
++scale_fill_manual(name="CLASS", breaks=c("Hexacorallia", "Octocorallia"), values=c('Hexacorallia'='red', "Octocorallia"="blue"))
++theme_bw()

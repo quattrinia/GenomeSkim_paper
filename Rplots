@@ -17,37 +17,182 @@ p=ggplot(filtered_skim, aes(x=CLASS, y=READS, fill=Circularized)) +
     geom_boxplot()+scale_fill_manual(values=c("darkred",  "blue"))
 p
 
-#ANOVA one way
+#ANOVA one way 
+#octocoral skim data#
 octoskimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimdata_octos.csv")
 filtered_skim <- octoskimdata %>% dplyr::filter(!Circularized %in% '')
-aov=aov(filtered_skim$READS~factor(filtered_skim$Circularized))
+logreads=log(filtered_skim$READS)
+aov=aov(logreads~factor(filtered_skim$Circularized))
 
 summary(aov)
-                                    Df    Sum Sq   Mean Sq F value
-factor(filtered_skim$Circularized)   1 2.962e+15 2.962e+15   96.86
-Residuals                          168 5.138e+15 3.058e+13        
-                                   Pr(>F)    
-factor(filtered_skim$Circularized) <2e-16 ***
-Residuals                                    
+ ummary(aov)
+                                    Df Sum Sq Mean Sq F value
+factor(filtered_skim$Circularized)   1  12.70  12.703   55.83
+Residuals                          168  38.23   0.228        
+                                     Pr(>F)    
+factor(filtered_skim$Circularized) 4.13e-12 ***
+Residuals                                      
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
+summary(aov)
+
+#hexacoral skim data#
 hexaskimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimdata_hexa.csv")
 filtered_skim <- hexaskimdata %>% dplyr::filter(!Circularized %in% '')
-aov=aov(filtered_skim$READS~factor(filtered_skim$Circularized))
+logreads=log(filtered_skim$READS)
+aov=aov(logreads~factor(filtered_skim$Circularized))
 summary(aov)
-                                   Df    Sum Sq   Mean Sq F value Pr(>F)
-factor(filtered_skim$Circularized)  1 9.314e+13 9.314e+13   1.372  0.251
-Residuals                          30 2.037e+15 6.790e+13   
+                                   Df Sum Sq Mean Sq F value
+factor(filtered_skim$Circularized)  1  0.726  0.7259   1.515
+Residuals                          30 14.374  0.4791        
+                                   Pr(>F)
+factor(filtered_skim$Circularized)  0.228
+Residuals             
 
-#READS vs YEAR for Pool 1
+##Pool 1 Statistical tests##
+#To assess normality
+library(ggpubr)
+ggdensity(pool1kimdata$LOCI)
+ggqqplot(pool1kimdata$LOCI)
+##To assess multicolinearity
+colindata=pool1kimdata[,"DNACONC", "LIBCONC"]
+var=cor(colindata)
+library(GGally)
+ggpairs(colindata)
+
 pool1kimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimstatspool1.csv")
+#YEAR vs READS
 ggplot(pool1kimdata, aes(x=YEAR, y=READS)) + 
 +     geom_point(size=1, color="darkblue")+
 +     geom_smooth(method="lm", color="darkblue")+theme_bw()
-#AGE vs LOCI for Pool 1
+#AGE vs LOCI
 ggplot(pool1kimdata, aes(x=YEAR, y=READS)) + 
 +     geom_point(size=1, color="darkblue")+
 +     geom_smooth(method="lm", color="darkblue")+theme_bw()
+
+etc.
+
+#Multiplicative and additive linear regression models on log-transformed data
+model1=lm(log(LOCI)~YEAR+LIBCONC,data=pool1kimdata)
+summary(model1)
+Call:
+lm(formula = log(LOCI) ~ YEAR + LIBCONC, data = pool1kimdata)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.0273 -0.1064  0.1624  0.4695  1.8848 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)   
+(Intercept)  7.462122  18.624225   0.401  0.69160   
+YEAR        -0.001003   0.009440  -0.106  0.91611   
+LIBCONC      0.099571   0.031610   3.150  0.00377 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.138 on 29 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.2881,	Adjusted R-squared:  0.239 
+F-statistic: 5.868 on 2 and 29 DF,  p-value: 0.007244
+
+model2=lm(log(LOCI)~YEAR*LIBCONC,data=pool1kimdata)
+> summary(model2)
+
+Call:
+lm(formula = log(LOCI) ~ YEAR * LIBCONC, data = pool1kimdata)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.0529 -0.1065  0.2117  0.4142  1.3972 
+
+Coefficients:
+               Estimate Std. Error t value Pr(>|t|)  
+(Intercept)  -95.537543  51.198367  -1.866   0.0725 .
+YEAR           0.050773   0.025762   1.971   0.0587 .
+LIBCONC        9.676853   4.471631   2.164   0.0391 *
+YEAR:LIBCONC  -0.004801   0.002241  -2.142   0.0410 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.073 on 28 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.3883,	Adjusted R-squared:  0.3228 
+F-statistic: 5.925 on 3 and 28 DF,  p-value: 0.002911
+
+
+model3=lm(log(LOCI)~READS,data=pool1kimdata)
+> summary(model3)
+
+Call:
+lm(formula = log(LOCI) ~ READS, data = pool1kimdata)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.1629 -0.1016  0.2384  0.4343  1.6598 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 4.848e+00  5.839e-01   8.302 2.23e-09 ***
+READS       2.424e-07  6.616e-08   3.663 0.000922 ***
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.094 on 31 degrees of freedom
+Multiple R-squared:  0.3021,	Adjusted R-squared:  0.2796 
+F-statistic: 13.42 on 1 and 31 DF,  p-value: 0.0009219
+
+model4=lm(log(READS)~YEAR*LIBCONC,data=pool1kimdata)
+> 
+> summary(model4)
+
+Call:
+lm(formula = log(READS) ~ YEAR * LIBCONC, data = pool1kimdata)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.07907 -0.15122 -0.00501  0.14935  0.74946 
+
+Coefficients:
+               Estimate Std. Error t value Pr(>|t|)  
+(Intercept)  -1.677e+01  1.672e+01  -1.003   0.3243  
+YEAR          1.585e-02  8.412e-03   1.884   0.0700 .
+LIBCONC       3.372e+00  1.460e+00   2.310   0.0285 *
+YEAR:LIBCONC -1.653e-03  7.319e-04  -2.259   0.0319 *
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.3505 on 28 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:   0.72,	Adjusted R-squared:   0.69 
+F-statistic:    24 on 3 and 28 DF,  p-value: 6.773e-08
+
+
+model4=lm(log(READS)~YEAR+LIBCONC,data=pool1kimdata)
+> 
+> summary(model4)
+
+Call:
+lm(formula = log(READS) ~ YEAR + LIBCONC, data = pool1kimdata)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.0646 -0.1471 -0.0093  0.2034  0.6228 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 18.691515   6.128932   3.050  0.00486 ** 
+YEAR        -0.001979   0.003107  -0.637  0.52917    
+LIBCONC      0.074764   0.010402   7.187 6.53e-08 ***
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.3744 on 29 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.669,	Adjusted R-squared:  0.6462 
+F-statistic: 29.31 on 2 and 29 DF,  p-value: 1.09e-07
 
 #All plots were subsequently edited in Illustrator for final touches

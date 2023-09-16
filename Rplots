@@ -66,12 +66,29 @@ pool1kimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skim
 ggplot(pool1kimdata, aes(x=YEAR, y=READS)) + 
 +     geom_point(size=1, color="darkblue")+
 +     geom_smooth(method="lm", color="darkblue")+theme_bw()
-#AGE vs LOCI
-ggplot(pool1kimdata, aes(x=YEAR, y=READS)) + 
+#YEAR vs LOCI
+ggplot(pool1kimdata, aes(x=YEAR, y=LOCI)) + 
++     geom_point(size=1, color="darkblue")+
++     geom_smooth(method="lm", color="darkblue")+theme_bw()
+#LIB vs LOCI
+ggplot(pool1kimdata, aes(x=LIBCONC, y=LOCI)) + 
 +     geom_point(size=1, color="darkblue")+
 +     geom_smooth(method="lm", color="darkblue")+theme_bw()
 
-etc.
+#LIB vs READS
+ggplot(pool1kimdata, aes(x=LIBCONC, y=READS)) + 
++     geom_point(size=1, color="darkblue")+
++     geom_smooth(method="lm", color="darkblue")+theme_bw()
+
+#LIB vs DNA
+ggplot(pool1kimdata, aes(x=LIBCONC, y=DNACONC)) + 
++     geom_point(size=1, color="darkblue")+
++     geom_smooth(method="lm", color="darkblue")+theme_bw()
+
+#READS vs LOCI
+ggplot(pool1kimdata, aes(x=READS, y=LOCI)) + 
++     geom_point(size=1, color="darkblue")+
++     geom_smooth(method="lm", color="darkblue")+theme_bw()
 
 #Multiplicative and additive linear regression models on log-transformed data
 model1=lm(log(LOCI)~YEAR+LIBCONC,data=pool1kimdata)

@@ -222,3 +222,10 @@ ggtree(treemid, layout="circular")+geom_tiplab(size=0.8, offset=.02)+xlim(0,1.4)
 #Extract tip labels
 TipLabels(treemid)
 
+p=ggtree(treemid, layout="circular")+geom_tiplab(size=0.8, offset=.02)+xlim(0,1.4)+geom_nodepoint(color="blue", size=0.05)
+ p
+ tiptraits=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/tips_skim.csv", col.names = c("tip", "type"),  header = TRUE, stringsAsFactors = FALSE)
+ dd = data.frame(tiptraits)
+ p %<+% dd +geom_tiplab(aes(colour=as.factor(type)), size=0.7, offset=.02, show.legend=FALSE)
+ 
+

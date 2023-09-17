@@ -213,3 +213,12 @@ Multiple R-squared:  0.669,	Adjusted R-squared:  0.6462
 F-statistic: 29.31 on 2 and 29 DF,  p-value: 1.09e-07
 
 #All plots were subsequently edited in Illustrator for final touches
+
+#GGTREE Circular Tree
+pruned.tree4=("Quattrini_GS_OCtocoral.tree")
+#midpointroot
+treemid=midpoint.root(pruned.tree4)
+ggtree(treemid, layout="circular")+geom_tiplab(size=0.8, offset=.02)+xlim(0,1.4)+geom_nodepoint(color="blue", size=0.03)
+#Extract tip labels
+TipLabels(treemid)
+

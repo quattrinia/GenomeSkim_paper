@@ -62,6 +62,7 @@ library(GGally)
 ggpairs(colindata)
 
 pool1kimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimstatspool1.csv")
+#Figure 2
 #YEAR vs READS
 ggplot(pool1kimdata, aes(x=YEAR, y=READS)) + 
 +     geom_point(size=1, color="darkblue")+

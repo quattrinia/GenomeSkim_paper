@@ -1,6 +1,6 @@
 ##Rplots##
 library(ggplot2)
-#READSVSLOCI
+#READSVSLOCI-Figure 1
 skimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimstats.csv")
 ggplot(skimdata, aes(x=READS, y=LOCI, color=CLASS)) 
 + geom_point(size=1)+geom_smooth(method="auto", se=TRUE, fullrange=FALSE, level=0.95, aes(fill=CLASS))
@@ -10,7 +10,7 @@ ggplot(skimdata, aes(x=READS, y=LOCI, color=CLASS))
 
 
 library(tidyverse)
-#READSvsCircular
+#READSvsCircular -Figure 5
 filtered_skim <- skimdata %>% dplyr::filter(!Circularized %in% '')
 ggplot(filtered_skim, aes(x=CLASS, y=READS, fill="Circularized")) + geom_boxplot()
 p=ggplot(filtered_skim, aes(x=CLASS, y=READS, fill=Circularized)) +

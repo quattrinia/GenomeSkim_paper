@@ -216,17 +216,15 @@ F-statistic: 29.31 on 2 and 29 DF,  p-value: 1.09e-07
 #All plots were subsequently edited in Illustrator for final touches
 
 #GGTREE Circular Tree
-pruned.tree4=("Quattrini_GS_OCtocoral.tree")
+library(ggtree)
+library(phytools)
+pruned.tree4=read.tree(file="/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/Quattrini_GS_OCtocoral.tree")
 #midpointroot
 treemid=midpoint.root(pruned.tree4)
-ggtree(treemid, layout="circular")+geom_tiplab(size=0.8, offset=.02)+xlim(0,1.4)+geom_nodepoint(color="blue", size=0.03)
+p=ggtree(treemid, layout="circular", branch.length="none")+geom_nodepoint(color="blue", size=0.3)+xlim(NA,40) 
 #Extract tip labels
 TipLabels(treemid)
-
-p=ggtree(treemid, layout="circular")+geom_tiplab(size=0.8, offset=.02)+xlim(0,1.4)+geom_nodepoint(color="blue", size=0.05)
- p
+p
  tiptraits=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/tips_skim.csv", col.names = c("tip", "type"),  header = TRUE, stringsAsFactors = FALSE)
  dd = data.frame(tiptraits)
- p %<+% dd +geom_tiplab(aes(colour=as.factor(type)), size=0.7, offset=.02, show.legend=FALSE)
- 
-
+p %<+% dd +geom_tiplab(aes(colour=as.factor(type)), size=0.7, offset=.2, show.legend=FALSE) 

@@ -12,9 +12,16 @@ ggplot(skimdata, aes(x=READS, y=LOCI, color=CLASS))
 library(tidyverse)
 #READSvsCircular -Figure 5
 filtered_skim <- skimdata %>% dplyr::filter(!Circularized %in% '')
+united_skim<- filtered_skim %>% unite(CLASS_Circ, c("CLASS", "Circularized"))
 ggplot(filtered_skim, aes(x=CLASS, y=READS, fill="Circularized")) + geom_boxplot()
 p=ggplot(filtered_skim, aes(x=CLASS, y=READS, fill=Circularized)) +
-    geom_boxplot()+scale_fill_manual(values=c("darkred",  "blue"))
+geom_boxplot()+scale_fill_manual(values=c("darkred",  "blue"))
+p
+#   
+p=ggplot(united_skim, aes(x=CLASS_Circ, y=READS,)) +
+  geom_violin() + 
+  stat_summary(fun.y=mean, geom="crossbar", size=0.5, color="gray") +
+  geom_jitter(shape=16, position=position_jitter(0.15)) 
 p
 
 #ANOVA one way 

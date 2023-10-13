@@ -12,6 +12,7 @@ ggplot(skimdata, aes(x=READS, y=LOCI, color=CLASS))
 ##Pool 1 Statistical tests##
 #To assess normality
 library(ggpubr)
+pool1kimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimstatspool1.csv")
 ggdensity(pool1kimdata$LOCI)
 ggqqplot(pool1kimdata$LOCI)
 ##To assess multicolinearity

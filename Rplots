@@ -1,5 +1,6 @@
 ##Rplots##
 library(ggplot2)
+library(tidyverse)            
 #READSVSLOCI-Figure 1
 skimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimstats.csv")
 ggplot(skimdata, aes(x=READS, y=LOCI, color=CLASS)) 
@@ -7,55 +8,6 @@ ggplot(skimdata, aes(x=READS, y=LOCI, color=CLASS))
 +scale_color_manual(values=c('darkred', 'darkblue'))
 +scale_fill_manual(name="CLASS", breaks=c("Hexacorallia", "Octocorallia"), values=c('Hexacorallia'='red', "Octocorallia"="blue"))
 +theme_bw()
-
-
-library(tidyverse)
-#READSvsCircular -Figure 5
-filtered_skim <- skimdata %>% dplyr::filter(!Circularized %in% '')
-united_skim<- filtered_skim %>% unite(CLASS_Circ, c("CLASS", "Circularized"))
-ggplot(filtered_skim, aes(x=CLASS, y=READS, fill="Circularized")) + geom_boxplot()
-p=ggplot(filtered_skim, aes(x=CLASS, y=READS, fill=Circularized)) +
-geom_boxplot()+scale_fill_manual(values=c("darkred",  "blue"))
-p
-#   
-p=ggplot(united_skim, aes(x=CLASS_Circ, y=READS,)) +
-  geom_violin() + 
-  stat_summary(fun.y=mean, geom="crossbar", size=0.5, color="gray") +
-  geom_jitter(shape=16, position=position_jitter(0.15)) 
-p
-
-#ANOVA one way 
-#octocoral skim data#
-octoskimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimdata_octos.csv")
-filtered_skim <- octoskimdata %>% dplyr::filter(!Circularized %in% '')
-logreads=log(filtered_skim$READS)
-aov=aov(logreads~factor(filtered_skim$Circularized))
-
-summary(aov)
- ummary(aov)
-                                    Df Sum Sq Mean Sq F value
-factor(filtered_skim$Circularized)   1  12.70  12.703   55.83
-Residuals                          168  38.23   0.228        
-                                     Pr(>F)    
-factor(filtered_skim$Circularized) 4.13e-12 ***
-Residuals                                      
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-summary(aov)
-
-#hexacoral skim data#
-hexaskimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimdata_hexa.csv")
-filtered_skim <- hexaskimdata %>% dplyr::filter(!Circularized %in% '')
-logreads=log(filtered_skim$READS)
-aov=aov(logreads~factor(filtered_skim$Circularized))
-summary(aov)
-                                   Df Sum Sq Mean Sq F value
-factor(filtered_skim$Circularized)  1  0.726  0.7259   1.515
-Residuals                          30 14.374  0.4791        
-                                   Pr(>F)
-factor(filtered_skim$Circularized)  0.228
-Residuals             
 
 ##Pool 1 Statistical tests##
 #To assess normality
@@ -67,7 +19,6 @@ colindata=pool1kimdata[,"DNACONC", "LIBCONC"]
 var=cor(colindata)
 library(GGally)
 ggpairs(colindata)
-
 pool1kimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimstatspool1.csv")
 #Figure 2
 #YEAR vs READS
@@ -222,7 +173,7 @@ F-statistic: 29.31 on 2 and 29 DF,  p-value: 1.09e-07
 
 #All plots were subsequently edited in Illustrator for final touches
 
-#GGTREE Circular Tree
+#GGTREE Circular Tree-Figure 3 and 4
 library(ggtree)
 library(phytools)
 pruned.tree4=read.tree(file="/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/Quattrini_GS_OCtocoral.tree")
@@ -235,3 +186,51 @@ p
  tiptraits=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/tips_skim.csv", col.names = c("tip", "type"),  header = TRUE, stringsAsFactors = FALSE)
  dd = data.frame(tiptraits)
 p %<+% dd +geom_tiplab(aes(colour=as.factor(type)), size=0.7, offset=.2, show.legend=FALSE) 
+
+#READSvsCircular -Figure 5
+filtered_skim <- skimdata %>% dplyr::filter(!Circularized %in% '')
+united_skim<- filtered_skim %>% unite(CLASS_Circ, c("CLASS", "Circularized"))
+ggplot(filtered_skim, aes(x=CLASS, y=READS, fill="Circularized")) + geom_boxplot()
+p=ggplot(filtered_skim, aes(x=CLASS, y=READS, fill=Circularized)) +
+geom_boxplot()+scale_fill_manual(values=c("darkred",  "blue"))
+p
+#   
+p=ggplot(united_skim, aes(x=CLASS_Circ, y=READS,)) +
+  geom_violin() + 
+  stat_summary(fun.y=mean, geom="crossbar", size=0.5, color="gray") +
+  geom_jitter(shape=16, position=position_jitter(0.15)) 
+p
+
+#ANOVA one way on ciruclarized and circularized mt genomes vs #reads
+#octocoral skim data#
+octoskimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimdata_octos.csv")
+filtered_skim <- octoskimdata %>% dplyr::filter(!Circularized %in% '')
+logreads=log(filtered_skim$READS)
+aov=aov(logreads~factor(filtered_skim$Circularized))
+
+summary(aov)
+ ummary(aov)
+                                    Df Sum Sq Mean Sq F value
+factor(filtered_skim$Circularized)   1  12.70  12.703   55.83
+Residuals                          168  38.23   0.228        
+                                     Pr(>F)    
+factor(filtered_skim$Circularized) 4.13e-12 ***
+Residuals                                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+summary(aov)
+
+#hexacoral skim data#
+hexaskimdata=read.csv("/Users/quattrinia/Manuscripts_and_Reports/GenomeSkim/skimdata_hexa.csv")
+filtered_skim <- hexaskimdata %>% dplyr::filter(!Circularized %in% '')
+logreads=log(filtered_skim$READS)
+aov=aov(logreads~factor(filtered_skim$Circularized))
+summary(aov)
+                                   Df Sum Sq Mean Sq F value
+factor(filtered_skim$Circularized)  1  0.726  0.7259   1.515
+Residuals                          30 14.374  0.4791        
+                                   Pr(>F)
+factor(filtered_skim$Circularized)  0.228
+Residuals 
+

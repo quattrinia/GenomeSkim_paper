@@ -1,0 +1,24 @@
+# /bin/sh
+# ----------------Parameters---------------------- #
+#$ -S /bin/sh
+#$ -pe mthread 24
+#$  -q uThC.q -l lopri
+#$ -l mres=72G,h_data=3G,h_vmem=3G
+#$ -cwd
+#$ -j y
+#$ -N iqtree.may23.v2.60p
+#$ -o iqtree.may23.v2.60p.log
+#$ -m bea
+#$ -M quattrinia@si.edu
+#
+# ----------------Modules------------------------- #
+module load bioinformatics/iqtree
+#
+# ----------------Your Commands------------------- #
+#
+echo + `date` job $JOB_NAME started in $QUEUE with jobID=$JOB_ID on $HOSTNAME
+echo + NSLOTS = $NSLOTS
+#
+iqtree2 -s /scratch/nmnh_corals/quattrinia/analysis/UCE/octos_tree_may23/taxon-sets/all/mafft-nexus-internal-trimmed-final-gblocks-clean-v2-60p-raxml/mafft-nexus-internal-trimmed-final-gblocks-clean-v2-60p-raxml.phylip  -p /scratch/nmnh_corals/quattrinia/analysis/UCE/octos_tree_may23/taxon-sets/all/mafft-nexus-internal-trimmed-final-gblocks-clean-v2-60p-raxml/mafft-nexus-internal-trimmed-final-gblocks-clean-v2-60p-raxml.charsets -m TESTMERGE -pre may23.final.v2.60p -rcluster 10 -bb 1000 -T $NSLOTS -alrt 1000
+#
+echo = `date` job $JOB_NAME done
